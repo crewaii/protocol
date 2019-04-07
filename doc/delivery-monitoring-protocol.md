@@ -30,6 +30,13 @@
 #### NORMAL MODE
   When side sends [`FRAGMENT`](#terms), it has to write a [`FRAGMENT`](#terms) to the [`S[PTR]`](#data-structures). When receiver side gets [`FRAGMENT`](#terms), it has to increment [`CNT`](#data-structures). When anyone gets [`ACK`](#special-fragments) it has to set [`CNT`](#data-structures)`= 0`, clear [`S[!PTR]`](#data-structures) and then send the [`ACK`](#special-fragments) back and at the same time negate the [`PTR`](#data-structures).
 
+| N step | Transition | N + 1 step |
+|:--------------:|:-------------:|:----------------:|
+| [`PTR`](#data-structures), [`CNT`](#data-structures) | send [`FRAGMENT`](#terms) | [`PTR`](#data-structures), [`CNT`](#data-structures) |
+| [`PTR`](#data-structures), [`CNT`](#data-structures) | recieved [`FRAGMENT`](#terms) | [`PTR`](#data-structures), [`CNT`](#data-structures) + 1 |
+| [`PTR`](#data-structures), [`CNT`](#data-structures) | send [`ACK`](#special-fragments) | [`!PTR`](#data-structures), [`CNT`](#data-structures) |
+| [`PTR`](#data-structures), [`CNT`](#data-structures) | recieved [`ACK`](#special-fragments) | [`PTR`](#data-structures), `0` |
+
 #### RESTORE MODE
   If the [`TRANSPORT`](#terms) has failed, after its restoration both sides have to sent [`SYN`](#special-fragments). Then each has count the value of ([`PTR`](#data-structures)<sub>local</sub> ⊕ [`PTR`](#data-structures)<sub>remote</sub> ⊕ [`FRS`](#data-structures)<sub>local</sub>). If this value is `1`, [`FRAGMENT`](#terms)s from [`S[PTR]`](#data-structures) starting from [`CNT`](#data-structures)<sub>remote</sub> were not delivered. Otherwise undelivered [`FRAGMENT`](#terms)s are those ones from [`S[!PTR]`](#data-structures) starting from [`CNT`](#data-structures)<sub>remote</sub> and all [`FRAGMENT`](#terms)s from [`S[PTR]`](#data-structures). 
   
