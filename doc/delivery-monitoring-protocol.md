@@ -5,7 +5,7 @@
 - `TRANSPORT`: mechanism of fragmented data interchange that guarantees in-order delivery (examples: [TCP](https://tools.ietf.org/html/rfc793)).
 
 ## PROBLEM
-  There are [`TRANSPORT`](#terms)s that can fall and in this case, does not provide information on which [`FRAGMENT`](#terms)s were delivered. This creates a problem after restoring the [`TRANSPORT`](#terms): which [`FRAGMENT`](#terms)s should be resend?
+  There are [`TRANSPORT`](#terms)s that can fall and in this case, does not provide information on which [`FRAGMENT`](#terms)s were delivered. This creates a problem after restoring the [`TRANSPORT`](#terms): which [`FRAGMENT`](#terms)s should be re-send?
 
 ## INTRODUCTION
   [`DMP`](#dmp--delivery-monitoring-protocol) have to be used with the [`TRANSPORT`](#terms) for tracking [`FRAGMENT`](#terms) delivery and, in case of the [`TRANSPORT`](#terms) failure, detecting undelivered [`FRAGMENT`](#terms)s. It solves [`PROBLEM`](#problem), and takes care of the efficient use of your memory and the time required for recovery. The protocol is symmetric for the sending and receiving side.
