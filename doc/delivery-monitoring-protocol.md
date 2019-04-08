@@ -24,6 +24,7 @@
 ### PROTOCOL STAGES
 #### PREPARATION
   Before the start of the protocol both sides have to initialize the necessary data structures with default values (empty storages([`S[0]`](#data-structures), [`S[1]`](#data-structures)), [`PTR`](#data-structures)`= 0`, [`CNT`](#data-structures)`= 0`), decide which side sends an [`ACK`](#special-fragments) first and depending on this, initialize the value of the [`FRS`](#data-structures): true if the side sends the [`ACK`](#special-fragments) first, false otherwise.
+  
   After it you can start sending [`FRAGMENT`](#terms)s by writing each [`FRAGMENT`](#terms) to the [`S[PTR]`](#data-structures) on the sender's side, and send the first [`ACK`](#special-fragments).
 
 #### NORMAL MODE
@@ -31,6 +32,7 @@
 
 #### RESTORE MODE
   If the [`TRANSPORT`](#terms) has failed, after its restoration both sides have to sent [`SYN`](#special-fragments). Then each ha count the value of ([`PTR`](#data-structures)<sub>local</sub> ⊕ [`PTR`](#data-structures)<sub>remote</sub> ⊕ [`FRS`](#data-structures)<sub>local</sub>). If this value is true, [`FRAGMENT`](#terms)s from [`S[PTR]`](#data-structures) starting from remote [`CNT`](#data-structures), else [`FRAGMENT`](#terms)s from [`S[!PTR]`](#data-structures) starting from [`CNT`](#data-structures)<sub>remote</sub> and all [`FRAGMENT`](#terms)s from [`S[PTR]`](#data-structures) were not delivered.
+  
   To restore sending [`FRAGMENT`](#terms)s, each side has to resend all of the undelivered [`FRAGMENT`](#terms). Side can start sending new [`FRAGMENT`](#terms)s and as soon as re-send all of the undelivered [`FRAGMENT`](#terms)s from your side.
 
 ### SENDING [`ACK`](#data-structures) (recommendation)
