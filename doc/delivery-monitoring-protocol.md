@@ -5,7 +5,7 @@
 - `TRANSPORT`: mechanism of fragmented data interchange that guarantees in-order delivering (examples: [TCP](https://tools.ietf.org/html/rfc793)).
 
 ## PROBLEM
-  There are [`TRANSPORT`](#terms)s that can fall and in this case, does not provide information on which [`FRAGMENT`](#terms)s were delivered. This creates a problem after returning the ability to transfer [`FRAGMENT`](#terms)s: which [`FRAGMENT`](#terms)s should be resended?
+  There are [`TRANSPORT`](#terms)s that can fall and in this case, does not provide information on which [`FRAGMENT`](#terms)s were delivered. This creates a problem after returning the ability to transfer fragments: which [`FRAGMENT`](#terms)s should be resended?
 
 ## INTRODUCTION
   [`DMP`](#dmp--delivery-monitoring-protocol) has to be used with the [`TRANSPORT`](#terms) for tracking [`FRAGMENT`](#terms) delivery and, in case of the [`TRANSPORT`](#terms) failure, detecting undelivered [`FRAGMENT`](#terms)s. It solves [`PROBLEM`](#problem), and takes care of the efficient use of memory and the time required for recovery. The protocol is symmetric for the sending and receiving side.
@@ -34,6 +34,3 @@
   If the [`TRANSPORT`](#terms) has failed, after its restoration both sides have to sent [`SYN`](#special-fragments). Then each ha count the value of ([`PTR`](#data-structures)<sub>local</sub> ⊕ [`PTR`](#data-structures)<sub>remote</sub> ⊕ [`FRS`](#data-structures)<sub>local</sub>). If this value is true, [`FRAGMENT`](#terms)s from [`S[PTR]`](#data-structures) starting from remote [`CNT`](#data-structures), else [`FRAGMENT`](#terms)s from [`S[!PTR]`](#data-structures) starting from [`CNT`](#data-structures)<sub>remote</sub> and all [`FRAGMENT`](#terms)s from [`S[PTR]`](#data-structures) were not delivered.
   
   To restore sending [`FRAGMENT`](#terms)s, each side has to resend all of the undelivered [`FRAGMENT`](#terms). Side can start sending new [`FRAGMENT`](#terms)s and as soon as re-send all of the undelivered [`FRAGMENT`](#terms)s from your side.
-
-### SENDING [`ACK`](#data-structures) (recommendation)
-  An [`ACK`](#special-fragments) has to be send only once after receiving an [`ACK`](#special-fragments) from the other side. This is the only rule about when the side should send an [`ACK`](#special-fragments). In turn, we want to offer our recommendation on this issue. In most [`TRANSPORT`](#terms) implementations: it will be critical for you how much memory is occupied by [`S[0]`](#data-structures), [`S[1]`](#data-structures), [`FRAGMENT`](#terms)s will be sent with a different time interval.
