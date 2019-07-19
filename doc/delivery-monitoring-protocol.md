@@ -26,14 +26,14 @@
   Before the start of the transferring [`FRAGMENT`](#terms)s both sides have to initialize the necessary data structures with default values (empty storages([`STORAGE[0]`](#data-structures), [`STORAGE[1]`](#data-structures)), [`LOCAL_STORAGE_PTR`](#data-structures)`= 0`, [`REMOTE_STORAGE_PTR`](#data-structures)`= 0`, [`COUNTER`](#data-structures)`= 0`).
 
 #### NORMAL MODE
-  When side sends [`FRAGMENT`](#terms), it has to write a [`FRAGMENT`](#terms) to the [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures). When receiver side gets [`FRAGMENT`](#terms), it has to increment [`COUNTER`](#data-structures). When anyone gets [`ACK`](#special-fragments) it has to set [`COUNTER`](#data-structures)`= 0` and at the same time negate the [`REMOTE_STORAGE_PTR`](#data-structures), and then send the [`ACK`](#special-fragments) back and at the same time negate the [`LOCAL_STORAGE_PTR`](#data-structures) and clear [`STORAGE[!LOCAL_STORAGE_PTR]`](#data-structures).
+  When side sends [`FRAGMENT`](#terms), it has to write a [`FRAGMENT`](#terms) to the [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures). When receiver side gets [`FRAGMENT`](#terms), it has to increment [`COUNTER`](#data-structures). When anyone gets [`ACK`](#special-fragments) it has to set [`COUNTER`](#data-structures)`= 0` and at the same time negate the [`REMOTE_STORAGE_PTR`](#data-structures), and then send the [`ACK`](#special-fragments) back and at the same time negate the [`LOCAL_STORAGE_PTR`](#data-structures) and clear [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures).
 
-| N step | Transition | N + 1 step |
-|:--------------:|:-------------:|:----------------:|
-| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | send [`FRAGMENT`](#terms) | [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) |
-| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | recieved [`FRAGMENT`](#terms) | [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) + 1 |
-| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | send [`ACK`](#special-fragments) | [`!LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) |
-| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | recieved [`ACK`](#special-fragments) | [`LOCAL_STORAGE_PTR`](#data-structures), [`!REMOTE_STORAGE_PTR`](#data-structures), `0` |
+| Transition | N + 1 step |
+|:-------------:|:----------------:|
+| send [`FRAGMENT`](#terms) | add a [`FRAGMENT`](#terms) to the [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) |
+| recieved [`FRAGMENT`](#terms) | [`COUNTER`](#data-structures) += 1 |
+| send [`ACK`](#special-fragments) | [`!LOCAL_STORAGE_PTR`](#data-structures) = [`!LOCAL_STORAGE_PTR`](#data-structures) and then clear [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) |
+| recieved [`ACK`](#special-fragments) | [`COUNTER`](#data-structures) = 0, [`REMOTE_STORAGE_PTR`](#data-structures) = [`!REMOTE_STORAGE_PTR`](#data-structures) |
 
 #### RESTORE MODE
   Suppose that [`TRANSPORT`](#terms) has failed.
