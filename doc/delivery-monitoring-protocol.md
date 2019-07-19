@@ -13,27 +13,27 @@
 ## PROTOCOL DESCRIPTION
 ### SPECIAL FRAGMENTS
 - `ACK`: does not contain any information, has to be sent in response to [`ACK`](#special-fragments) from the other side.
-- `SYN`: contains [`REMOTE_STORAGE_POINTER`](#data-structures) and [`COUNTER`](#data-structures), and has to be sent primarily after [`TRANSPORT`](#terms) restoration from both sides.
+- `SYN`: contains [`REMOTE_STORAGE_PTR`](#data-structures) and [`COUNTER`](#data-structures), and has to be sent primarily after [`TRANSPORT`](#terms) restoration from both sides.
   
 ### DATA STRUCTURES
 - `STORAGE[0]`, `STORAGE[1]`: two ordered "storages" of sent [`FRAGMENT`](#terms)s. (The "storage" is only conditional. The main thing is that you should have access to the already sent [`FRAGMENT`](#terms)s, divided into two parts as the protocol requires.)
-- `LOCAL_STORAGE_POINTER`: a boolean pointer to which "storage" the [`FRAGMENT`](#terms)s should be written.
-- `REMOTE_STORAGE_POINTER`: a boolean pointer, latest verified local knowledge of the status of a remote [`LOCAL_STORAGE_POINTER`](#data-structures).
+- `LOCAL_STORAGE_PTR`: a boolean pointer to which "storage" the [`FRAGMENT`](#terms)s should be written.
+- `REMOTE_STORAGE_PTR`: a boolean pointer, latest verified local knowledge of the status of a remote [`LOCAL_STORAGE_PTR`](#data-structures).
 - `COUNTER`: an unsigned integer counter of the received data [`FRAGMENT`](#terms)s.
 
 ### PROTOCOL STAGES
 #### PREPARATION
-  Before the start of the transferring [`FRAGMENT`](#terms)s both sides have to initialize the necessary data structures with default values (empty storages([`STORAGE[0]`](#data-structures), [`STORAGE[1]`](#data-structures)), [`LOCAL_STORAGE_POINTER`](#data-structures)`= 0`, [`REMOTE_STORAGE_POINTER`](#data-structures)`= 0`, [`COUNTER`](#data-structures)`= 0`).
+  Before the start of the transferring [`FRAGMENT`](#terms)s both sides have to initialize the necessary data structures with default values (empty storages([`STORAGE[0]`](#data-structures), [`STORAGE[1]`](#data-structures)), [`LOCAL_STORAGE_PTR`](#data-structures)`= 0`, [`REMOTE_STORAGE_PTR`](#data-structures)`= 0`, [`COUNTER`](#data-structures)`= 0`).
 
 #### NORMAL MODE
-  When side sends [`FRAGMENT`](#terms), it has to write a [`FRAGMENT`](#terms) to the [`STORAGE[LOCAL_STORAGE_POINTER]`](#data-structures). When receiver side gets [`FRAGMENT`](#terms), it has to increment [`COUNTER`](#data-structures). When anyone gets [`ACK`](#special-fragments) it has to set [`COUNTER`](#data-structures)`= 0` and at the same time negate the [`REMOTE_STORAGE_POINTER`](#data-structures), and then send the [`ACK`](#special-fragments) back and at the same time negate the [`LOCAL_STORAGE_POINTER`](#data-structures) and clear [`STORAGE[!LOCAL_STORAGE_POINTER]`](#data-structures).
+  When side sends [`FRAGMENT`](#terms), it has to write a [`FRAGMENT`](#terms) to the [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures). When receiver side gets [`FRAGMENT`](#terms), it has to increment [`COUNTER`](#data-structures). When anyone gets [`ACK`](#special-fragments) it has to set [`COUNTER`](#data-structures)`= 0` and at the same time negate the [`REMOTE_STORAGE_PTR`](#data-structures), and then send the [`ACK`](#special-fragments) back and at the same time negate the [`LOCAL_STORAGE_PTR`](#data-structures) and clear [`STORAGE[!LOCAL_STORAGE_PTR]`](#data-structures).
 
 | N step | Transition | N + 1 step |
 |:--------------:|:-------------:|:----------------:|
-| [`LOCAL_STORAGE_POINTER`](#data-structures), [`REMOTE_STORAGE_POINTER`](#data-structures), [`COUNTER`](#data-structures) | send [`FRAGMENT`](#terms) | [`LOCAL_STORAGE_POINTER`](#data-structures), [`REMOTE_STORAGE_POINTER`](#data-structures), [`COUNTER`](#data-structures) |
-| [`LOCAL_STORAGE_POINTER`](#data-structures), [`REMOTE_STORAGE_POINTER`](#data-structures), [`COUNTER`](#data-structures) | recieved [`FRAGMENT`](#terms) | [`LOCAL_STORAGE_POINTER`](#data-structures), [`REMOTE_STORAGE_POINTER`](#data-structures), [`COUNTER`](#data-structures) + 1 |
-| [`LOCAL_STORAGE_POINTER`](#data-structures), [`REMOTE_STORAGE_POINTER`](#data-structures), [`COUNTER`](#data-structures) | send [`ACK`](#special-fragments) | [`!LOCAL_STORAGE_POINTER`](#data-structures), [`REMOTE_STORAGE_POINTER`](#data-structures), [`COUNTER`](#data-structures) |
-| [`LOCAL_STORAGE_POINTER`](#data-structures), [`REMOTE_STORAGE_POINTER`](#data-structures), [`COUNTER`](#data-structures) | recieved [`ACK`](#special-fragments) | [`LOCAL_STORAGE_POINTER`](#data-structures), [`!REMOTE_STORAGE_POINTER`](#data-structures), `0` |
+| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | send [`FRAGMENT`](#terms) | [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) |
+| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | recieved [`FRAGMENT`](#terms) | [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) + 1 |
+| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | send [`ACK`](#special-fragments) | [`!LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) |
+| [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | recieved [`ACK`](#special-fragments) | [`LOCAL_STORAGE_PTR`](#data-structures), [`!REMOTE_STORAGE_PTR`](#data-structures), `0` |
 
 ![dmp_normal_mode_image](https://user-images.githubusercontent.com/31672093/57922020-7471d700-78a7-11e9-8ea8-a86cb0c6485b.gif)
 
@@ -42,7 +42,7 @@
   
   ![dmp_fail_image](https://user-images.githubusercontent.com/31672093/57922129-aedb7400-78a7-11e9-88db-e81c01fa4adc.gif)
   
-  After its restoration both sides have to sent [`SYN`](#special-fragments). If [`REMOTE_STORAGE_POINTER`](#data-structures)<sub>remote</sub> equals [`LOCAL_STORAGE_POINTER`](#data-structures)<sub>local</sub>, [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_POINTER]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> were not delivered. Otherwise undelivered [`FRAGMENT`](#terms)s are those ones from [`STORAGE[!LOCAL_STORAGE_POINTER]]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> and all [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_POINTER]]`](#data-structures).
+  After its restoration both sides have to sent [`SYN`](#special-fragments). If [`REMOTE_STORAGE_PTR`](#data-structures)<sub>remote</sub> equals [`LOCAL_STORAGE_PTR`](#data-structures)<sub>local</sub>, [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> were not delivered. Otherwise undelivered [`FRAGMENT`](#terms)s are those ones from [`STORAGE[!LOCAL_STORAGE_PTR]]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> and all [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_PTR]]`](#data-structures).
   
   ![dmp_restore_mode_image](https://user-images.githubusercontent.com/31672093/57922186-cca8d900-78a7-11e9-8a4b-24975a131024.gif) 
   
