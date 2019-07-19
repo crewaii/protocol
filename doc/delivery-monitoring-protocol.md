@@ -31,9 +31,9 @@
 | Transition | State changes |
 |:-------------:|:----------------:|
 | send [`FRAGMENT`](#terms) | add a [`FRAGMENT`](#terms) to the [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) |
-| recieved [`FRAGMENT`](#terms) | increment [`COUNTER`](#data-structures) |
-| send [`ACK`](#special-fragments) | negate the [`LOCAL_STORAGE_PTR`](#data-structures) and then clear [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) |
-| recieved [`ACK`](#special-fragments) | reset [`COUNTER`](#data-structures), negate the [`REMOTE_STORAGE_PTR`](#data-structures) |
+| recieved [`FRAGMENT`](#terms) | [`COUNTER`](#data-structures) += 1 |
+| send [`ACK`](#special-fragments) | [`LOCAL_STORAGE_PTR`](#data-structures) ^= 1 and then clear [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) |
+| recieved [`ACK`](#special-fragments) | [`COUNTER`](#data-structures) = 0, [`REMOTE_STORAGE_PTR`](#data-structures) ^= 1 |
 
 #### RESTORE MODE
   Suppose that [`TRANSPORT`](#terms) has failed.
