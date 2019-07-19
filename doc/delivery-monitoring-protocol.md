@@ -35,16 +35,10 @@
 | [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | send [`ACK`](#special-fragments) | [`!LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) |
 | [`LOCAL_STORAGE_PTR`](#data-structures), [`REMOTE_STORAGE_PTR`](#data-structures), [`COUNTER`](#data-structures) | recieved [`ACK`](#special-fragments) | [`LOCAL_STORAGE_PTR`](#data-structures), [`!REMOTE_STORAGE_PTR`](#data-structures), `0` |
 
-![dmp_normal_mode_image](https://user-images.githubusercontent.com/31672093/57922020-7471d700-78a7-11e9-8ea8-a86cb0c6485b.gif)
-
 #### RESTORE MODE
   Suppose that [`TRANSPORT`](#terms) has failed.
   
-  ![dmp_fail_image](https://user-images.githubusercontent.com/31672093/57922129-aedb7400-78a7-11e9-88db-e81c01fa4adc.gif)
-  
   After its restoration both sides have to sent [`SYN`](#special-fragments). If [`REMOTE_STORAGE_PTR`](#data-structures)<sub>remote</sub> equals [`LOCAL_STORAGE_PTR`](#data-structures)<sub>local</sub>, [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> were not delivered. Otherwise undelivered [`FRAGMENT`](#terms)s are those ones from [`STORAGE[!LOCAL_STORAGE_PTR]]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> and all [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_PTR]]`](#data-structures).
-  
-  ![dmp_restore_mode_image](https://user-images.githubusercontent.com/31672093/57922186-cca8d900-78a7-11e9-8a4b-24975a131024.gif) 
   
   To restore sending [`FRAGMENT`](#terms)s, each side has to resend all of the undelivered [`FRAGMENT`](#terms)s. Side can start sending new [`FRAGMENT`](#terms)s and as soon as re-send all of the undelivered [`FRAGMENT`](#terms)s from your side.
 
