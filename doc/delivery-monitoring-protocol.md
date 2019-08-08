@@ -25,7 +25,7 @@
 #### PREPARATION
   Before the start of the transferring [`FRAGMENT`](#terms)s both sides have to initialize the necessary data structures with default values (empty storages([`STORAGE[0]`](#data-structures), [`STORAGE[1]`](#data-structures)), [`LOCAL_STORAGE_PTR`](#data-structures)`= 0`, [`REMOTE_STORAGE_PTR`](#data-structures)`= 0`, [`COUNTER`](#data-structures)`= 0`).
 
-#### NORMAL MODE
+#### [NORMAL MODE](dmp-normal-mode.md)
   When side sends [`FRAGMENT`](#terms), it has to write a [`FRAGMENT`](#terms) to the [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures). When receiver side gets [`FRAGMENT`](#terms), it has to increment [`COUNTER`](#data-structures). When anyone gets [`ACK`](#special-fragments) it has to set [`COUNTER`](#data-structures)`= 0` and at the same time negate the [`REMOTE_STORAGE_PTR`](#data-structures), and then send the [`ACK`](#special-fragments) back and at the same time negate the [`LOCAL_STORAGE_PTR`](#data-structures) and clear [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures).
 
 | Transition | State changes |
@@ -35,8 +35,8 @@
 | send [`ACK`](#special-fragments) | [`LOCAL_STORAGE_PTR`](#data-structures) ^= 1 and then clear [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) |
 | recieved [`ACK`](#special-fragments) | [`COUNTER`](#data-structures) = 0, [`REMOTE_STORAGE_PTR`](#data-structures) ^= 1 |
 
-#### RESTORE MODE
-  Suppose that [`TRANSPORT`](#terms) has failed.
+#### [RESTORE MODE](dmp-restore-mode.md)
+  Suppose that [`TRANSPORT`](#terms) has [failed](dmp-transport-failed.md).
   
   After its restoration both sides have to sent [`SYN`](#special-fragments). If [`REMOTE_STORAGE_PTR`](#data-structures)<sub>remote</sub> equals [`LOCAL_STORAGE_PTR`](#data-structures)<sub>local</sub>, [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_PTR]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> were not delivered. Otherwise undelivered [`FRAGMENT`](#terms)s are those ones from [`STORAGE[!LOCAL_STORAGE_PTR]]`](#data-structures) starting from [`COUNTER`](#data-structures)<sub>remote</sub> and all [`FRAGMENT`](#terms)s from [`STORAGE[LOCAL_STORAGE_PTR]]`](#data-structures).
   
