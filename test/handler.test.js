@@ -2,4 +2,6 @@
 
 const Handler = require('../lib/handler');
 
-test('', () => {});
+test('', () => {
+  new Handler();
+});
